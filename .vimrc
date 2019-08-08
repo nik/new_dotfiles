@@ -3,7 +3,16 @@ filetype on                  " required
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
+set runtimepath+=~/.vim/bundle/neobundle.vim/
 call vundle#begin()
+call neobundle#begin(expand('~/.vim/bundle/'))
+
+NeoBundleFetch 'Shougo/neobundle.vim'
+
+NeoBundle 'airblade/vim-gitgutter'
+call neobundle#end()
+
+NeoBundleCheck
 " alternatively, pass a path where Vundle should install plugins
 "call vundle#begin('~/some/path/here')
 
@@ -15,7 +24,9 @@ Plugin 'VundleVim/Vundle.vim'
 """""""""""""""""""""""""
 
 " appearance
-Plugin 'nviennot/molokai'
+Plugin 'morhetz/gruvbox'
+Plugin 'hzchirs/vim-material'
+Plugin 'dracula/vim'
 
 " editing
 Plugin 'godlygeek/tabular'
@@ -25,12 +36,14 @@ Plugin 'sjl/gundo.vim'
 Plugin 'vim-scripts/YankRing.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'tmhedberg/matchit'
+Plugin 'sheerun/vim-polyglot'
 
 " navigation
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'ervandew/supertab'
 Plugin 'rking/ag.vim'
 Plugin 'scrooloose/nerdtree'
+Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
 
 " languages
 Plugin 'AndrewRadev/vim-eco'
@@ -39,6 +52,7 @@ Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'yaymukund/vim-rabl'
 Plugin 'tpope/vim-endwise'
 Plugin 'pangloss/vim-javascript'
+Plugin 'kchmck/vim-coffee-script'
 Plugin 'mxw/vim-jsx'
 
 " frameworks
@@ -47,12 +61,18 @@ Plugin 'othree/html5.vim'
 Plugin 'elixir-lang/vim-elixir'
 
 " misc
+Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plugin 'vim-airline/vim-airline'
+Plugin 'w0rp/ale'
 Plugin 'mattn/gist-vim'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'mattn/webapi-vim'
-Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
 Plugin 'vim-ruby/vim-ruby'
+
+Plugin 'ryanoasis/vim-devicons'
+
+set encoding=UTF-8
 
 " Plugins you want just for yourself go here
 if filereadable(expand("~/.custom.vim-plugins"))
@@ -68,18 +88,32 @@ filetype plugin indent on    " required
 """""""""""""""""""""""""
 " Display options
 syntax on
+set termguicolors
+set nowrap
 set nocursorline
 set number
 set list!                       " Display unprintable characters
 set listchars=tab:▸\ ,trail:•,extends:»,precedes:«
-if $TERM =~ '256color'
-  set t_Co=256
-elseif $TERM =~ '^xterm$'
-  set t_Co=256
-endif
-colorscheme nemo-light
+
+set bg=dark
+let g:gruvbox_contrast_dark=1
+let g:gruvbox_hls_cursor='purple'
+let g:material_style='oceanic'
+colo vim-material
+
+let g:airline_theme='material'
+let g:airline_powerline_fonts = 1
+let g:ale_fixers = {
+      \  'ruby': ['rubocop']
+      \}
+
+let g:ale_enabled = 1
+
+set t_ZH=^[[3m
+set t_ZR=^[[23m
 
 " Misc
+set cursorline
 set hidden                      " Don't abandon buffers moved to the background
 set wildmenu                    " Enhanced completion hints in command line
 set wildmode=list:longest,full  " Complete longest common match and show possible matches and wildmenu
@@ -117,7 +151,7 @@ set formatoptions-=t formatoptions+=croql
 "   "500 : save up to 500 lines for each register
 "   :1000 : up to 1000 lines of command-line history will be remembered
 "   n... : where to save the viminfo files
-set viminfo=%100,'100,/100,h,\"500,:1000,n~/.vim/viminfo
+set viminfo=%100,'100,/100,h,\"500,:1000,n~/.nviminfo
 
 " ctags: recurse up to home to find tags.
 set tags+=tags;$HOME
@@ -248,15 +282,6 @@ nnoremap <C-y> :YRShow<cr>
 let g:yankring_history_dir = '$HOME/.vim'
 let g:yankring_manual_clipboard_check = 0
 
-let g:syntastic_enable_signs = 1
-let g:syntastic_mode_map = { 'mode': 'active',
-                           \ 'active_filetypes': [],
-                           \ 'passive_filetypes': ['c', 'scss', 'html', 'scala'] }
-let g:syntastic_ruby_checkers = ['rubocop']
-let g:syntastic_javascript_checkers = ['jshint']
-let g:syntastic_css_checkers = ['stylelint']
-let g:syntastic_less_checkers = ['stylelint']
-
 let g:quickfixsigns_classes=['qfl', 'vcsdiff', 'breakpoints']
 
 set laststatus=2
@@ -264,7 +289,7 @@ set laststatus=2
 let g:ctrlp_map = '<Leader>.'
 let g:ctrlp_custom_ignore = '/\.\|\.o\|\.so'
 let g:ctrlp_switch_buffer = 0
-let g:ctrlp_regexp = 1
+let g:ctrlp_regexp = 0
 let g:ctrlp_user_command = ['.git/', 'cd %s && git ls-files']
 map <Leader>, :CtrlPMRU<CR>
 
@@ -311,12 +336,23 @@ au BufRead,BufNewFile *.rabl setf ruby
 "Matchit macro for ruby block text objects
 runtime macros/matchit.vim
 
-" toggle syntastic error panel
-function! ToggleErrorPanel()
-  let old_window_count = winnr('$')
-  lclose
-  if old_window_count == winnr('$')
-    " Nothing was closed, open syntastic error location panel
-    Errors
-  endif
-endfunction
+" EXPERIMENTAL
+
+hi vertsplit ctermfg=238 ctermbg=235
+hi LineNr ctermfg=237
+hi StatusLine ctermfg=235 ctermbg=245
+hi StatusLineNC ctermfg=235 ctermbg=237
+hi Search ctermbg=58 ctermfg=15
+hi Default ctermfg=1
+hi clear SignColumn
+hi SignColumn ctermbg=235
+hi GitGutterAdd ctermbg=235 ctermfg=245
+hi GitGutterChange ctermbg=235 ctermfg=245
+hi GitGutterDelete ctermbg=235 ctermfg=245
+hi GitGutterChangeDelete ctermbg=235 ctermfg=245
+hi EndOfBuffer ctermfg=237 ctermbg=235
+
+set statusline=%=&P\ %f\ %m
+set fillchars=vert:\ ,stl:\ ,stlnc:\
+set laststatus=2
+set noshowmode
