@@ -26,6 +26,7 @@ Plugin 'VundleVim/Vundle.vim'
 " appearance
 Plugin 'morhetz/gruvbox'
 Plugin 'hzchirs/vim-material'
+Plugin 'noahfrederick/vim-hemisu'
 Plugin 'dracula/vim'
 
 " editing
@@ -33,7 +34,6 @@ Plugin 'godlygeek/tabular'
 Plugin 'kana/vim-textobj-user'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'sjl/gundo.vim'
-Plugin 'vim-scripts/YankRing.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'tmhedberg/matchit'
 Plugin 'sheerun/vim-polyglot'
@@ -96,13 +96,14 @@ set list!                       " Display unprintable characters
 set listchars=tab:▸\ ,trail:•,extends:»,precedes:«
 
 set bg=dark
-let g:gruvbox_contrast_dark=1
-let g:gruvbox_hls_cursor='purple'
 let g:material_style='oceanic'
-colo vim-material
-
 let g:airline_theme='material'
-let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#show_splits = 0
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+
 let g:ale_fixers = {
       \  'ruby': ['rubocop']
       \}
@@ -113,7 +114,6 @@ set t_ZH=^[[3m
 set t_ZR=^[[23m
 
 " Misc
-set cursorline
 set hidden                      " Don't abandon buffers moved to the background
 set wildmenu                    " Enhanced completion hints in command line
 set wildmode=list:longest,full  " Complete longest common match and show possible matches and wildmenu
@@ -218,14 +218,12 @@ map <Leader>/ :nohlsearch<cr>
 map <Home> :tprev<CR>
 map <End>  :tnext<CR>
 
+nnoremap <C-N> :bnext<CR>
+nnoremap <C-P> :bprev<CR>
+
 " TODO Do also cnext and cprev as a fallback
 map <PageDown> :lnext<CR>
 map <PageUp>   :lprev<CR>
-
-" Make Y consistent with D and C
-function! YRRunAfterMaps()
-  nnoremap <silent> Y :<C-U>YRYankCount 'y$'<CR>
-endfunction
 
 " Disable K for manpages - not used often and easy to accidentally hit
 noremap K k
@@ -252,12 +250,8 @@ cmap w!! w !sudo tee % >/dev/null
 """""""""""""""""""""""""
 " Plugins
 """""""""""""""""""""""""
-nnoremap <Leader>b :BufSurfBack<cr>
-nnoremap <Leader>f :BufSurfForward<cr>
-
 nnoremap <S-u> :GundoToggle<CR>
 let g:gundo_close_on_revert=1
-
 
 " TODO Merge the NERDTreeFind with Toggle inteilligently.
 nnoremap <C-g> :NERDTreeToggle<cr>
@@ -277,10 +271,6 @@ nnoremap <Leader>a :Ag
 
 " Put a space around comment markers
 let g:NERDSpaceDelims = 1
-
-nnoremap <C-y> :YRShow<cr>
-let g:yankring_history_dir = '$HOME/.vim'
-let g:yankring_manual_clipboard_check = 0
 
 let g:quickfixsigns_classes=['qfl', 'vcsdiff', 'breakpoints']
 
@@ -340,8 +330,6 @@ runtime macros/matchit.vim
 
 hi vertsplit ctermfg=238 ctermbg=235
 hi LineNr ctermfg=237
-hi StatusLine ctermfg=235 ctermbg=245
-hi StatusLineNC ctermfg=235 ctermbg=237
 hi Search ctermbg=58 ctermfg=15
 hi Default ctermfg=1
 hi clear SignColumn
@@ -356,3 +344,5 @@ set statusline=%=&P\ %f\ %m
 set fillchars=vert:\ ,stl:\ ,stlnc:\
 set laststatus=2
 set noshowmode
+
+colo vim-material
