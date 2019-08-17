@@ -6,3 +6,7 @@
   - cd Library/Application Support/iTerm2/DynamicProfiles
   - copy your json file you saves to this DynamicProfiles folder
   - cp {backuppath-where-you-exported-in-step1}/itermprofiles.json .
+  
+## VIM-DEVICONS
+
+Follow instructions in https://github.com/ryanoasis/vim-devicons
