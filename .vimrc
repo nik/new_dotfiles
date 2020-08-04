@@ -28,6 +28,7 @@ Plugin 'morhetz/gruvbox'
 Plugin 'hzchirs/vim-material'
 Plugin 'noahfrederick/vim-hemisu'
 Plugin 'dracula/vim'
+Plugin 'ayu-theme/ayu-vim'
 
 " editing
 Plugin 'godlygeek/tabular'
@@ -39,11 +40,12 @@ Plugin 'tmhedberg/matchit'
 Plugin 'sheerun/vim-polyglot'
 
 " navigation
-Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'ervandew/supertab'
 Plugin 'rking/ag.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plugin 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plugin 'junegunn/fzf.vim'
 
 " languages
 Plugin 'AndrewRadev/vim-eco'
@@ -53,7 +55,6 @@ Plugin 'yaymukund/vim-rabl'
 Plugin 'tpope/vim-endwise'
 Plugin 'pangloss/vim-javascript'
 Plugin 'kchmck/vim-coffee-script'
-Plugin 'mxw/vim-jsx'
 
 " frameworks
 Plugin 'tpope/vim-rails'
@@ -61,7 +62,11 @@ Plugin 'othree/html5.vim'
 Plugin 'elixir-lang/vim-elixir'
 
 " misc
-Plugin 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plugin 'HerringtonDarkholme/yats.vim'
+Plugin 'mhartington/nvim-typescript', {'build': './install.sh'}
+Plugin 'Shougo/deoplete.nvim'
+Plugin 'Shougo/denite.nvim'
+
 Plugin 'vim-airline/vim-airline'
 Plugin 'w0rp/ale'
 Plugin 'mattn/gist-vim'
@@ -110,6 +115,8 @@ let g:ale_fixers = {
 
 let g:ale_enabled = 1
 
+let g:deoplete#enable_at_startup = 1
+
 set t_ZH=^[[3m
 set t_ZR=^[[23m
 
@@ -151,7 +158,10 @@ set formatoptions-=t formatoptions+=croql
 "   "500 : save up to 500 lines for each register
 "   :1000 : up to 1000 lines of command-line history will be remembered
 "   n... : where to save the viminfo files
-set viminfo=%100,'100,/100,h,\"500,:1000,n~/.nviminfo
+if !has('nvim')
+  set viminfo+=n~/.vim/viminfo
+endif
+" set viminfo=%100,'100,/100,h,\"500,:1000,n~/.nviminfo
 
 " ctags: recurse up to home to find tags.
 set tags+=tags;$HOME
@@ -175,8 +185,6 @@ let html_number_lines = 1
 let html_ignore_folding = 1
 let html_use_css = 1
 let xml_use_xhtml = 1
-
-let g:jsx_ext_required = 0
 
 " When opening a file, always jump to the last cursor position
 autocmd BufReadPost *
@@ -276,12 +284,19 @@ let g:quickfixsigns_classes=['qfl', 'vcsdiff', 'breakpoints']
 
 set laststatus=2
 
-let g:ctrlp_map = '<Leader>.'
-let g:ctrlp_custom_ignore = '/\.\|\.o\|\.so'
-let g:ctrlp_switch_buffer = 0
-let g:ctrlp_regexp = 0
-let g:ctrlp_user_command = ['.git/', 'cd %s && git ls-files']
-map <Leader>, :CtrlPMRU<CR>
+" let g:ctrlp_map = '<Leader>.'
+" let g:ctrlp_custom_ignore = '/\.\|\.o\|\.so'
+" let g:ctrlp_switch_buffer = 0
+" let g:ctrlp_regexp = 0
+" let g:ctrlp_user_command = ['.git/', 'cd %s && git ls-files']
+" map <Leader>, :CtrlPMRU<CR>
+
+" set fzf to.respect .gitignore
+let $FZF_DEFAULT_COMMAND='ag --files-with-matches'
+nnoremap <C-t> :Files<CR>
+
+let $FZF_DEFAULT_OPTS='--reverse'
+let g:fzf_layout = { 'window': {'width': 0.8, 'height': 0.8} }
 
 noremap \= :Tabularize /=<CR>
 noremap \: :Tabularize /^[^:]*:\zs/l0l1<CR>
@@ -294,6 +309,8 @@ noremap \& :Tabularize /\(&\\|\\\\\)<CR>
 nmap <leader>gi :Gist
 let g:gist_post_private = 1
 let g:gist_open_browser_after_post = 1
+
+let g:python3_host_prog = '/usr/bin/python3'
 
 """""""""""""""""""""""""
 " Cscope
@@ -345,4 +362,6 @@ set fillchars=vert:\ ,stl:\ ,stlnc:\
 set laststatus=2
 set noshowmode
 
-colo vim-material
+" colo less
+let ayucolor="mirage"   " for dark version of theme
+colorscheme ayu
