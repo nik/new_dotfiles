@@ -1,6 +1,7 @@
 set nocompatible              " be iMproved, required
 filetype on                  " required
 
+set t_Co=256
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 set runtimepath+=~/.vim/bundle/neobundle.vim/
@@ -28,7 +29,9 @@ Plugin 'morhetz/gruvbox'
 Plugin 'hzchirs/vim-material'
 Plugin 'noahfrederick/vim-hemisu'
 Plugin 'dracula/vim'
+Plugin 'NLKNguyen/papercolor-theme'
 Plugin 'ayu-theme/ayu-vim'
+Plugin 'nyoom-engineering/oxocarbon.nvim'
 
 " editing
 Plugin 'godlygeek/tabular'
@@ -38,6 +41,7 @@ Plugin 'sjl/gundo.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'tmhedberg/matchit'
 Plugin 'sheerun/vim-polyglot'
+Plugin 'github/copilot.vim'
 
 " navigation
 Plugin 'ervandew/supertab'
@@ -55,6 +59,7 @@ Plugin 'yaymukund/vim-rabl'
 Plugin 'tpope/vim-endwise'
 Plugin 'pangloss/vim-javascript'
 Plugin 'kchmck/vim-coffee-script'
+Plugin 'fatih/vim-go'
 
 " frameworks
 Plugin 'tpope/vim-rails'
@@ -68,6 +73,7 @@ Plugin 'Shougo/deoplete.nvim'
 Plugin 'Shougo/denite.nvim'
 
 Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'w0rp/ale'
 Plugin 'mattn/gist-vim'
 Plugin 'airblade/vim-gitgutter'
@@ -102,7 +108,7 @@ set listchars=tab:▸\ ,trail:•,extends:»,precedes:«
 
 set bg=dark
 let g:material_style='oceanic'
-let g:airline_theme='material'
+let g:airline_theme='papercolor'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
@@ -110,12 +116,16 @@ let g:airline#extensions#tabline#show_splits = 0
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 
 let g:ale_fixers = {
-      \  'ruby': ['rubocop']
+      \'ruby': ['rubocop'],
       \}
 
+let g:ale_ruby_rubocop_executable = 'bundle'
+
+let g:ale_fix_on_save = 1
 let g:ale_enabled = 1
 
 let g:deoplete#enable_at_startup = 1
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | silent! pclose | endif
 
 set t_ZH=^[[3m
 set t_ZR=^[[23m
@@ -292,7 +302,7 @@ set laststatus=2
 " map <Leader>, :CtrlPMRU<CR>
 
 " set fzf to.respect .gitignore
-let $FZF_DEFAULT_COMMAND='ag --files-with-matches'
+let $FZF_DEFAULT_COMMAND='rg --files'
 nnoremap <C-t> :Files<CR>
 
 let $FZF_DEFAULT_OPTS='--reverse'
@@ -364,4 +374,6 @@ set noshowmode
 
 " colo less
 let ayucolor="mirage"   " for dark version of theme
-colorscheme ayu
+colorscheme PaperColor
+" colo 256-grayvim
+set background=light
